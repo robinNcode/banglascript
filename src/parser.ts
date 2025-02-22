@@ -1,5 +1,5 @@
 import * as ohm from 'ohm-js';
-import {transliterateBangla} from './utils/transliterate';
+import { transliterateBangla } from './utils/transliterate';
 
 // Define the BanglaScript grammar
 const banglaGrammar = `
@@ -8,30 +8,27 @@ const banglaGrammar = `
     Statement = PrintStatement | VariableDeclaration
 
     PrintStatement = "দেখাও" "(" outputString ")" ";"
-    VariableDeclaration = VarKeyword ~" " VarType ~" " (identifier | bengaliIdentifier) ~" " "=" ~" " Expression ";"
+    VariableDeclaration = VarKeyword VarType (Identifier | BengaliIdentifier) "=" Expression ";"
 
     VarKeyword = "ধরি" | "ধ্রুবক" | "চলক"
-    VarType = "সংখ্যা" | "হাছামিছা" | "দড়ি" | "বিন্যাস" | "সংখ্যা_বিন্যাস" | "দড়ি_বিন্যাস"
+    VarType = "সংখ্যা" | "হাছামিছা" | "দড়ি" | "বিন্যাস" | "সংখ্যা_বিন্যাস" | "দড়ি_বিন্যাস"
+    Expression = String | Number | Boolean | Identifier | BengaliIdentifier
 
-    Expression = String | Number | Boolean | identifier
-    String = "\\"" chars "\\""
-    chars = (~"\\"" any)*
+    String = "\\"" (~"\\"" any)* "\\""
     Number = digit+ ("." digit+)?  -- withDecimal
-       | digit+                -- withoutDecimal
-
+           | digit+                -- withoutDecimal
     Boolean = "সত্য" | "মিথ্যা"
-    
+
+    outputString = String | Identifier | BengaliIdentifier
+    Identifier = letter (letter | digit)*
+    BengaliIdentifier = bengaliLetters (bengaliLetters | bengaliDigit | "_")*
+
     bengaliLetters = "অ" | "আ" | "ই" | "ঈ" | "উ" | "ঊ" | "ঋ" | "এ" | "ঐ" | "ও" | "ঔ" | "ক" | "খ" | "গ" | "ঘ" | "ঙ" | "চ" | "ছ" | "জ" | "ঝ" | "ঞ" 
-          | "ট" | "ঠ" | "ড" | "ঢ" | "ণ" | "ত" | "থ" | "দ" | "ধ" | "ন" | "প" | "ফ" | "ব" | "ভ" | "ম" | "য" | "র" | "ল" | "শ" | "ষ" 
-          | "স" | "হ" | "ক্ষ" | "ড়" | "ঢ়" | "য়" | "ৄ" | "ৢ" | "ৣ" | "ৎ" | "ং" | "ঃ" | "ঁ" | "ঽ" | "অঁ"
-    bengaliDigit = "০" | "১" | "২" | "৩" | "৪" | "৫" | "৬" | "৭" | "৮" | "৯" 
-    bengaliIdentifier = bengaliLetters (bengaliLetters | bengaliDigit | "_")*
-    
-    identifier = letter (letter | digit)*
-    
-    outputString = "\\"" chars "\\"" -- string 
-      | letter (letter | digit)* -- identifier
-      | bengaliLetters (bengaliLetters | bengaliDigit | "_")* -- bengaliIdentifier
+                   | "ট" | "ঠ" | "ড" | "ঢ" | "ণ" | "ত" | "থ" | "দ" | "ধ" | "ন" | "প" | "ফ" | "ব" | "ভ" | "ম" | "য" | "র" | "ল" | "শ" | "ষ" 
+                   | "স" | "হ" | "ক্ষ" | "ড়" | "ঢ়" | "য়" | "ৄ" | "ৢ" | "ৣ" | "ৎ" | "ং" | "ঃ" | "ঁ" | "ঽ" | "অঁ"
+    bengaliDigit = "০" | "১" | "২" | "৩" | "৪" | "৫" | "৬" | "৭" | "৮" | "৯"
+
+    space := " " | "\\t" | "\\n" | "\\r"
   }
 `;
 
@@ -45,11 +42,6 @@ semantics.addOperation('toTS()', {
     return statements.children.map((s) => s.toTS()).join("\n");
   },
 
-  Statement(stmt) {
-    return stmt.toTS();
-  },
-
-  // PrintStatement now handles the outputString rule properly
   PrintStatement(_write, _openParen, str, _closeParen, _semicolon) {
     return `console.log(${str.toTS()});`;
   },
@@ -64,60 +56,41 @@ semantics.addOperation('toTS()', {
     const jsType = {
       "সংখ্যা": "number",
       "হাছামিছা": "boolean",
-      "দড়ি": "string",
+      "দড়ি": "string",
       "বিন্যাস": "any[]",
       "সংখ্যা_বিন্যাস": "number[]",
-      "দড়ি_বিন্যাস": "string[]"
+      "দড়ি_বিন্যাস": "string[]"
     }[varType.sourceString];
 
     // Check if the identifier is Bengali or not
-    const tsVarName = (id.sourceString.match(/^[\u0980-\u09FF]+$/)) ? transliterateBangla(id.sourceString) : id.sourceString;
-
+    const tsVarName = transliterateBangla(id.sourceString);
     const tsExpr = expr.toTS();
 
     return `${jsKeyword} ${tsVarName}: ${jsType} = ${tsExpr};`;
   },
 
-  // Handle outputString as either a string literal or an identifier
-  outputString_string(_openQuote, chars, _closeQuote) {
-    return `"${chars.sourceString}"`; // Preserve quotes for string output
+  StringLiteral(_openQuote, chars, _closeQuote) {
+    return `"${chars.sourceString}"`; // Preserve quotes for string literals
   },
-  outputString_identifier(firstChar, restChars) {
-    return transliterateBangla(firstChar.sourceString + restChars.sourceString);
-  },
-  outputString_bengaliIdentifier(firstChar, restChars) {
+
+  Identifier(firstChar, restChars) {
     return transliterateBangla(firstChar.sourceString + restChars.sourceString);
   },
 
-  // String handling (keeping as it is)
-  String(_open, chars, _close) {
-    // Manually handling escaping here
-    return `"${chars.sourceString.replace(/\\"/g, '"')}"`;
+  BengaliIdentifier(firstChar, restChars) {
+    return transliterateBangla(firstChar.sourceString + restChars.sourceString);
   },
 
-  // Number with decimal
   Number_withDecimal(intPart, _dot, decimalPart) {
     return intPart.sourceString + "." + decimalPart.sourceString;
   },
 
-  // Number without decimal
   Number_withoutDecimal(intPart) {
     return intPart.sourceString;
   },
 
-  // Boolean handling
   Boolean(bool) {
     return bool.sourceString === "সত্য" ? "true" : "false";
-  },
-
-  // Identifier handling (Transliterate Bangla identifiers)
-  identifier(firstChar, restChars) {
-    return transliterateBangla(firstChar.sourceString + restChars.sourceString);
-  },
-
-  // Handling characters in strings
-  chars(chars) {
-    return chars.sourceString;
   }
 });
 
