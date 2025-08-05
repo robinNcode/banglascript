@@ -7,6 +7,9 @@ import {
   Handshake,
 } from 'lucide-react';
 
+// images
+import logo from '../assets/images/bs_icon.png';
+
 const navItems = [
   { name: 'হোম', path: '/', icon: Home },
   { name: 'কোড', path: '/editor', icon: Code2 },
@@ -26,7 +29,12 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-900 text-white px-6 py-3 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-xl font-bold tracking-wider">BanglaScript</h1>
+        <div>
+          <Link to="/" className="flex items-center gap-2">
+            <img src={logo} className="w-8 h-8" alt="logo" />
+            <span className="text-lg font-semibold">BanglaScript</span>
+          </Link>
+        </div>
         <div className="flex gap-6 text-sm">
           {navItems.map(({ name, path, icon: Icon, external }) =>
             external ? (
