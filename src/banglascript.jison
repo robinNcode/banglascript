@@ -4,6 +4,7 @@
 
 %%
 \s+             /* skip whitespace */
+
 "দেখাও"        return 'PRINT'
 "ধরি"           return 'VAR_LET'
 "ধ্রুবক"        return 'VAR_CONST'
@@ -85,6 +86,8 @@ statement_list
 statement
     : variable_declaration SEMICOLON
         { $$ = $1; }
+    | print_statement SEMICOLON /* NEW: A rule for the 'দেখাও' statement */
+        { $$ = $1; }
     | expression SEMICOLON
         { $$ = { type: 'ExpressionStatement', expression: $1 }; }
     | if_statement
@@ -95,6 +98,19 @@ statement
         { $$ = $1; }
     | class_declaration
         { $$ = $1; }
+    | assignment_statement SEMICOLON
+        { $$ = $1; }
+    ;
+
+/* NEW: Definition of the 'print_statement' */
+assignment_statement
+    : IDENTIFIER ASSIGN expression
+        { $$ = { type: 'AssignmentExpression', operator: '=', left: { type: 'Identifier', name: $1 }, right: $3 }; }
+    ;
+    
+print_statement
+    : PRINT LPAREN expression RPAREN
+        { $$ = { type: 'PrintStatement', arguments: [$3] }; }
     ;
 
 variable_declaration
