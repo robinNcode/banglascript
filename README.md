@@ -6,7 +6,7 @@ BanglaScript is a programming language that uses Bengali characters for its synt
 # Features
 - Uses Bengali characters for syntax
 - Bengali version of TypeScript syntax
-- Transpiles to JavaScript
+- Transpiles to TypeScript
 - Simple and easy to learn
 - Open source
 
@@ -19,19 +19,21 @@ Here is an example of a simple program written in BanglaScript:
     ```
 - Conditional statement
     ```javascript
-    যদি (সত্য) {
-        দেখাও("সত্য");
-    } 
-    অথবা যদি (0){
-        দেখাও("শুন্য");
+    চলক number = 0;
+
+    যদি (number) {
+      দেখাও("সত্য");
     }
-    অথবা {
-        দেখাও("মিথ্যা");
+    নয়তোযদি (0){
+      দেখাও("শুন্য");
+    }
+    নয়তো {
+      দেখাও("মিথ্যা");
     }
     ```
 - Loop
     ```javascript
-    পুনরাবৃত্তি কর(পূর্ণসংখ্যা এ = ০; এ < ৫; এ++) {
+    জন্য(পূর্ণসংখ্যা এ = ০; এ < ৫; এ++) {
         দেখাও(এ);
     }
     ```
@@ -53,10 +55,11 @@ Here is an example of a simple program written in BanglaScript:
 
 # Contributing
 If you are interested in contributing to this project, feel free to fork the repository and submit a pull request. I am always looking for ways to improve the language and make it more useful.
+[Contributing Guide](CONTRIBUTE.md)
 
 # License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 
-# Design and Developed by
+# Design, Developed, and Maintained by
 - [MD Shahin Mia Robin](https://linkedin.com/in/robinncode)
