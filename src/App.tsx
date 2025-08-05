@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { parse } from './lib/parser.ts';
 import { transpile } from './lib/transpiler.ts';
+import { banglascript } from './lib/banglascript_mode.ts';
+
+// Importing styles
 import './App.css';
+
+// Editor component for BanglaScript code
+import CodeMirror from '@uiw/react-codemirror';
+
 
 const App = () => {
   const [code, setCode] = useState('দেখাও("হ্যালো, বিশ্ব!");');
@@ -36,6 +43,7 @@ const App = () => {
   return (
     <div className="container">
       <h1>বাংলাস্ক্রিপ্ট অনলাইন সম্পাদক</h1>
+      <CodeMirror value={code} onChange={setCode} extensions={[banglascript()]} theme="dark" />
       <div className="editor-container">
         <textarea
           className="code-editor"
