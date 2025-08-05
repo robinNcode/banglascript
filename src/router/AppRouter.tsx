@@ -9,8 +9,8 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/docs" element={<Docs />} />
         <Route path="/editor" element={<Editor />} />
+        <Route path="/docs" element={<Docs />} />
         <Route path="/feedback" element={<Feedback />} />
       </Routes>
     </BrowserRouter>

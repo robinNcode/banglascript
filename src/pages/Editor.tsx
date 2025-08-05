@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
+import {javascript} from '@codemirror/lang-javascript';
 import Navbar from '../components/Navbar';
-import { transpile } from '../lib/transpiler';
-import { parse } from '../lib/parser';
-import { translateErrorToBengali } from '../lib/error_translator';
+import {transpile} from '../lib/transpiler';
+import {parse} from '../lib/parser';
+import {translateErrorToBengali} from '../lib/error_translator';
+
+// Icons
+import {RotateCcw, RotateCw, Play, TimerReset} from 'lucide-react';
 
 export default function Editor() {
   const [code, setCode] = useState('দেখাও("হ্যালো, বিশ্ব!");');
@@ -27,18 +30,27 @@ export default function Editor() {
 
   return (
     <>
-      <Navbar />
+      <Navbar/>
       <div className="flex flex-col h-[calc(100vh-64px)]">
         {/* Toolbar */}
-        <div className="flex gap-4 px-4 py-2 bg-gray-100 border-b border-gray-300">
-          <button onClick={run} className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700">Run</button>
-          <button onClick={reset} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600">Reset</button>
-          <button onClick={() => document.execCommand('undo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Undo</button>
-          <button onClick={() => document.execCommand('redo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Redo</button>
+        <div className="flex justify-end gap-4 px-4 py-2 bg-gray-800 border-b border-gray-300">
+          <button onClick={run} className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-700">
+            <Play className="w-4 h-4"/>
+          </button>
+          <button onClick={reset} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600">
+            <TimerReset className="w-4 h-4"/>
+          </button>
+          <button onClick={() => document.execCommand('undo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+            <RotateCcw className="w-4 h-4"/>
+          </button>
+          <button onClick={() => document.execCommand('redo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+            <RotateCw className="w-4 h-4"/>
+          </button>
         </div>
 
+
         {/* Editor */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto bg-gray-800 text-white p-4">
           <CodeMirror
             value={code}
             height="100%"
