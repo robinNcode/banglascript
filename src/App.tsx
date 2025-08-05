@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { parse } from './parser';
-import { transpile } from './transpiler.ts';
+import { parse } from './lib/parser.ts';
+import { transpile } from './lib/transpiler.ts';
 import './App.css';
 
 const App = () => {

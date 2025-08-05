@@ -1,5 +1,5 @@
 {
-  "name": "banglascript2.o",
+  "name": "banglascript",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-parser": "jison src/banglascript.jison --module-type=esm -o src/banglascript_parser.mjs"
+    "generate-parser": "jison src/lib/banglascript.jison --module-type=esm -o src/lib/banglascript_parser.mjs"
   },
   "dependencies": {
     "jison": "^0.4.18",
