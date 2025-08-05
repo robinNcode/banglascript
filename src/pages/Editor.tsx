@@ -7,57 +7,129 @@ import {parse} from '../lib/parser';
 import {translateErrorToBengali} from '../lib/error_translator';
 
 // Icons
-import {RotateCcw, RotateCw, Play, TimerReset} from 'lucide-react';
+import {RotateCcw, RotateCw, Play, TimerReset, FilePlus, X} from 'lucide-react';
+
+interface File {
+  name: string;
+  content: string;
+}
 
 export default function Editor() {
-  const [code, setCode] = useState('দেখাও("হ্যালো, বিশ্ব!");');
+  const [files, setFiles] = useState<File[]>([{ name: 'main.bs', content: 'দেখাও("হ্যালো, বিশ্ব!");' }]);
+  const [activeFileIndex, setActiveFileIndex] = useState(0);
   const [output, setOutput] = useState('');
 
+  const activeFile = files[activeFileIndex];
+  const code = activeFile?.content || '';
+
+  const setCode = (content: string) => {
+    const newFiles = [...files];
+    newFiles[activeFileIndex].content = content;
+    setFiles(newFiles);
+  };
+
   const run = () => {
+    if (!activeFile) return;
     try {
       const ast = parse(code);
       const result = transpile(ast);
-      setOutput(result);
+      const originalLog = console.log;
+      let capturedOutput = '';
+      console.log = (...args) => {
+        capturedOutput += args.join(' ') + '\n';
+      };
+      try {
+        new Function(result)();
+        setOutput(capturedOutput);
+      } catch (e: any) {
+        setOutput(translateErrorToBengali(e.message));
+      } finally {
+        console.log = originalLog;
+      }
     } catch (err: any) {
       setOutput(translateErrorToBengali(err.message));
     }
   };
 
   const reset = () => {
+    if (!activeFile) return;
     setCode('');
     setOutput('');
   };
+
+  const newFile = () => {
+    const newFileName = `file${files.length + 1}.bs`;
+    setFiles([...files, { name: newFileName, content: '' }]);
+    setActiveFileIndex(files.length);
+  };
+
+  const closeFile = (index: number) => {
+    if (files.length <= 1) return; // Prevent closing the last file
+    const newFiles = [...files];
+    newFiles.splice(index, 1);
+    setFiles(newFiles);
+
+    if (activeFileIndex >= index) {
+      setActiveFileIndex(Math.max(0, activeFileIndex - 1));
+    }
+  };
+
 
   return (
     <>
       <Navbar/>
       <div className="flex flex-col h-[calc(100vh-64px)]">
-        {/* Toolbar */}
-        <div className="flex justify-end gap-4 px-4 py-2 bg-gray-800 border-b border-gray-300">
-          <button onClick={run} className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-700">
-            <Play className="w-4 h-4"/>
-          </button>
-          <button onClick={reset} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600">
-            <TimerReset className="w-4 h-4"/>
-          </button>
-          <button onClick={() => document.execCommand('undo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
-            <RotateCcw className="w-4 h-4"/>
-          </button>
-          <button onClick={() => document.execCommand('redo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
-            <RotateCw className="w-4 h-4"/>
-          </button>
+        {/* Toolbar & File Tabs */}
+        <div className="flex justify-between items-center px-4 py-2 bg-gray-800 border-b border-gray-300">
+          <div className="flex items-center gap-2">
+            {files.map((file, index) => (
+              <div key={index} className={`flex items-center gap-2 px-4 py-2 ${ index === activeFileIndex
+                  ? 'bg-gray-700 text-white'
+                  : 'bg-gray-800 text-gray-400'
+              }`}>
+                <button onClick={() => setActiveFileIndex(index)}>
+                  {file.name}
+                </button>
+                {index > 0 && (
+                  <button onClick={() => closeFile(index)} className="hover:text-red-500">
+                    <X className="w-4 h-4"/>
+                  </button>
+                )}
+              </div>
+            ))}
+
+            <button onClick={newFile} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+              <FilePlus className="w-4 h-5"/>
+            </button>
+          </div>
+          <div className="flex items-center gap-4">
+            <button onClick={run} className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-700">
+              <Play className="w-4 h-4"/>
+            </button>
+            <button onClick={reset} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600">
+              <TimerReset className="w-4 h-4"/>
+            </button>
+            <button onClick={() => document.execCommand('undo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+              <RotateCcw className="w-4 h-4"/>
+            </button>
+            <button onClick={() => document.execCommand('redo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+              <RotateCw className="w-4 h-4"/>
+            </button>
+          </div>
         </div>
 
 
         {/* Editor */}
         <div className="flex-1 overflow-auto bg-gray-800 text-white p-4">
-          <CodeMirror
-            value={code}
-            height="100%"
-            theme="dark"
-            extensions={[javascript()]} // Replace with your BanglaScript mode later
-            onChange={(value) => setCode(value)}
-          />
+          {activeFile && (
+            <CodeMirror
+              value={code}
+              height="100%"
+              theme="dark"
+              extensions={[javascript()]} // Replace with your BanglaScript mode later
+              onChange={(value) => setCode(value)}
+            />
+          )}
         </div>
 
         {/* Output */}
@@ -68,3 +140,4 @@ export default function Editor() {
     </>
   );
 }
+
