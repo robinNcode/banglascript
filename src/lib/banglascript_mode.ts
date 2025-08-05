@@ -5,7 +5,8 @@ import { styleTags, tags as t } from "@lezer/highlight";
 const banglaKeywords = ["ধরি", "ধ্রুবক", "চলক", "সংখ্যা", "হাছামিছা", "দড়ি", "বিন্যাস", "যদি", "নয়তোযদি", "নয়তো", "কাঠামো", "ফেরত", "জন্য", "যতক্ষণ", "প্রত্যেকেরজন্য", "শ্রেণী", "নির্মাতা", "নতুন", "দেখাও"];
 
 // Dynamically create the styleTags mapping
-const keywordMapping = {};
+const keywordMapping: Record<string, any> = {};
+
 banglaKeywords.forEach(keyword => {
   keywordMapping[keyword] = t.keyword;
 });

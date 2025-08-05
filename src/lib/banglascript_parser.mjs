@@ -1532,7 +1532,7 @@ var banglascript_parser = (function () {
         lstack.length = lstack.length - n;
       }
 
-      _token_stack:
+      //_token_stack:
         var lex = function () {
           var token;
           token = lexer.lex() || EOF;
