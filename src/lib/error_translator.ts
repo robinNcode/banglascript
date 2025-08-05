@@ -11,5 +11,5 @@ export function translateErrorToBengali(message: string): string {
       return dictionary[key];
     }
   }
-  return 'অজানা ত্রুটি ঘটেছে, অনুগ্রহ করে কোড পরীক্ষা করুন।';
+  return 'অজানা ত্রুটি ঘটেছে, অনুগ্রহ করে কোড পরীক্ষা করুন: \n' + message;
 }

@@ -90,19 +90,30 @@ statement
         { $$ = $1; }
     | expression SEMICOLON
         { $$ = { type: 'ExpressionStatement', expression: $1 }; }
-    | if_statement
+    | typed_variable_declaration SEMICOLON
+
+    | array_literal
         { $$ = $1; }
-    | loop_statement
+    | if_statement optional_semicolon
         { $$ = $1; }
-    | function_declaration
+    | loop_statement optional_semicolon
         { $$ = $1; }
-    | class_declaration
+    | function_declaration optional_semicolon
+        { $$ = $1; }
+    | class_declaration optional_semicolon
         { $$ = $1; }
     | assignment_statement SEMICOLON
         { $$ = $1; }
     ;
 
 /* NEW: Definition of the 'print_statement' */
+optional_semicolon
+    : SEMICOLON
+        { $$ = ';'; }
+    | /* empty */
+        { $$ = null; }
+    ;
+
 assignment_statement
     : IDENTIFIER ASSIGN expression
         { $$ = { type: 'AssignmentExpression', operator: '=', left: { type: 'Identifier', name: $1 }, right: $3 }; }
@@ -149,6 +160,11 @@ type
         { $$ = 'number[]'; }
     | TYPE_STRING_ARRAY
         { $$ = 'string[]'; }
+    ;
+
+typed_variable_declaration
+    : type IDENTIFIER ASSIGN expression
+        { $$ = { type: 'VariableDeclaration', kind: 'let', declarations: [{ id: { name: $2, type: $1 }, init: $4 }] }; }
     ;
 
 if_statement
@@ -308,4 +324,11 @@ primary_expression
         { $$ = { type: 'Literal', value: false }; }
     | LPAREN expression RPAREN
         { $$ = $2; }
+    | array_literal
+        { $$ = $1; }
+    ;
+
+array_literal
+    : LBRACKET arguments RBRACKET
+        { $$ = { type: 'ArrayExpression', elements: $2 }; }
     ;

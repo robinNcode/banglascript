@@ -33,11 +33,15 @@ export default function Editor() {
     try {
       const ast = parse(code);
       const result = transpile(ast);
+      // Debugging
+      console.log(`[DEBUG]: Transpiled code: ${result}`);
+
       const originalLog = console.log;
       let capturedOutput = '';
       console.log = (...args) => {
         capturedOutput += args.join(' ') + '\n';
       };
+
       try {
         new Function(result)();
         setOutput(capturedOutput);
@@ -126,7 +130,7 @@ export default function Editor() {
               value={code}
               height="100%"
               theme="dark"
-              extensions={[javascript()]} // Replace with your BanglaScript mode later
+              extensions={[javascript()]}
               onChange={(value) => setCode(value)}
             />
           )}
