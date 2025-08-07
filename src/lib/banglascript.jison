@@ -36,7 +36,7 @@
 "সত্য"         return 'TRUE'
 "মিথ্যা"       return 'FALSE'
 
-[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)* return 'IDENTIFIER'
+[a-zA-Z0-9_\u0980-\u09FF]+(\.[a-zA-Z0-9_\u0980-\u09FF]+)* return 'IDENTIFIER'
 
 "("             return 'LPAREN'
 ")"             return 'RPAREN'
