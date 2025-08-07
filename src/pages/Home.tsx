@@ -8,6 +8,7 @@ import {SquareCode, Cpu} from 'lucide-react';
 
 // Image import for the homepage
 import banglaLogo from '../assets/images/bs_horizontal_logo-removebg.png';
+import Footer from "../components/Footer.tsx";
 
 export default function Home() {
   const [visitors, setVisitors] = useState<number | null>(null);
@@ -57,6 +58,7 @@ export default function Home() {
         </p>
 
       </section>
+      <Footer />
     </>
   );
 }

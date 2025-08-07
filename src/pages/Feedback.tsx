@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import Footer from "../components/Footer.tsx";
 
 export default function Feedback() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -93,6 +94,7 @@ export default function Feedback() {
           </form>
         )}
       </div>
+      <Footer />
     </>
   );
 }

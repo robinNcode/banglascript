@@ -1,5 +1,6 @@
 import { useState, type SetStateAction} from 'react';
 import Navbar from '../components/Navbar';
+import Footer from "../components/Footer.tsx";
 
 const topics = [
   {
@@ -209,6 +210,7 @@ export default function Docs() {
           </section>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
