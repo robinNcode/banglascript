@@ -48,12 +48,12 @@ export function transpile(node: any): string {
             return `console.log(${node.arguments.map(transpile).join(', ')});`;
 
         case 'Literal':
-            if (typeof node.value === 'string') {
+            { if (typeof node.value === 'string') {
                 return `"${node.value}"`;
             }
             // Convert Bengali numbers to English before processing
             const valueStr = String(node.value);
-            return convertBengaliToEnglish(valueStr);
+            return convertBengaliToEnglish(valueStr); }
 
         case 'Identifier':
             return node.name;
