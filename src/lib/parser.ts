@@ -5,7 +5,7 @@ export function parse(input: string): any {
     return (banglascript_parser as any).parse(input);
   } catch (err: any) {
     if (err.hash && err.hash.loc) {
-      const { first_line, last_line, first_column, last_column } = err.hash.loc;
+      const { first_line} = err.hash.loc;
       const message = err.message.split('\n').slice(2).join('\n'); // Clean up the error message
       throw new Error(`ভুল, লাইন নংঃ ${first_line} 
  ${message} 
