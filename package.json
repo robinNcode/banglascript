@@ -1,5 +1,6 @@
 {
   "name": "banglascript",
+  "homepage": "https://robinNcode.github.io/banglascript",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "generate-parser": "jison src/lib/banglascript.jison --module-type=esm -o src/lib/banglascript_parser.mjs",
-    "server": "ts-node -r dotenv/config backend/server.ts"
+    "server": "ts-node -r dotenv/config backend/server.ts",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.4",
