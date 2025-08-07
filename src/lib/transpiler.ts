@@ -6,6 +6,15 @@
 
 const declaredVariables = new Set<string>();
 
+// Helper function to convert Bengali digits to English digits
+function convertBengaliToEnglish(bengaliNumber: string): string {
+    const bengaliDigits: { [key: string]: string } = {
+        '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4',
+        '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9'
+    };
+    return bengaliNumber.replace(/[০-৯]/g, (digit) => bengaliDigits[digit]);
+}
+
 export function transpile(node: any): string {
     if (!node || typeof node !== 'object') {
         throw new Error(`Invalid node: ${JSON.stringify(node)}`);
@@ -28,9 +37,9 @@ export function transpile(node: any): string {
         case 'AssignmentExpression':
             { const varAssignName = node.left.name;
 
-            // Throw error if variable is not declared
             if (!declaredVariables.has(varAssignName)) {
-                throw new Error(`ত্রুটিঃ অঘোষিত চলক "${varAssignName}"`);
+                declaredVariables.add(varAssignName); // Add to declared set
+                return `let ${varAssignName} ${node.operator} ${transpile(node.right)};`;
             }
 
             return `${varAssignName} ${node.operator} ${transpile(node.right)};`; }
@@ -39,9 +48,12 @@ export function transpile(node: any): string {
             return `console.log(${node.arguments.map(transpile).join(', ')});`;
 
         case 'Literal':
-            return typeof node.value === 'string'
-                ? `"${node.value}"`
-                : String(node.value);
+            if (typeof node.value === 'string') {
+                return `"${node.value}"`;
+            }
+            // Convert Bengali numbers to English before processing
+            const valueStr = String(node.value);
+            return convertBengaliToEnglish(valueStr);
 
         case 'Identifier':
             return node.name;

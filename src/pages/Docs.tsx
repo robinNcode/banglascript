@@ -1,45 +1,121 @@
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 
+const topics = [
+  { id: 'basics', title: 'মৌলিক উদাহরণ', example: `ধরি নাম = "BanglaScript";
+দেখাও("হ্যালো, বিশ্ব!");
+দেখাও("আমার নাম হলো: " + নাম);` },
+  { id: 'variables', title: 'চলক ঘোষণা', example: `ধরি বয়স = 25;
+ধরি নাম = "করিম";
+ধরি সফল = সত্যি;` },
+  { id: 'operators', title: 'গাণিতিক অপারেটর', example: `ধরি ক = 10;
+ধরি খ = 5;
+ধরি যোগফল = ক + খ; // যোগ
+ধরি বিয়োগফল = ক - খ; // বিয়োগ
+ধরি গুণফল = ক * খ; // গুণ
+ধরি ভাগফল = ক / খ; // ভাগ
+দেখাও(যোগফল);` },
+  { id: 'conditionals', title: 'শর্তসাপেক্ষ বিবৃতি', example: `ধরি বয়স = 18;
+যদি (বয়স >= 18) {
+  দেখাও("আপনি ভোট দিতে পারেন।");
+} নয়তো {
+  দেখাও("আপনি ভোট দিতে পারেন না।");
+}` },
+  { id: 'loops', title: 'লুপ', example: `// জন্য লুপ
+জন্য (ধরি i = 0; i < 5; i = i + 1) {
+  দেখাও("লুপ চলছে: " + i);
+}
+
+// যতক্ষণ লুপ
+ধরি j = 0;
+যতক্ষণ (j < 3) {
+  দেখাও("j এর মান: " + j);
+  j = j + 1;
+}` },
+  { id: 'functions', title: 'ফাংশন', example: `কাঠামো যোগ(ক, খ) {
+  ফিরিয়ে দাও(ক + খ);
+}
+
+ধরি ফলাফল = যোগ(5, 3);
+দেখাও(ফলাফল);` },
+  { id: 'oop', title: 'OOP', example: `// OOP ধারণা
+কাঠামো গাড়ি(ব্র্যান্ড) {
+  ধরি এই.ব্র্যান্ড = ব্র্যান্ড;
+  কাঠামো চালাও() {
+    দেখাও(এই.ব্র্যান্ড + " চলছে।");
+  }
+}
+
+ধরি আমারগাড়ি = নতুন গাড়ি("টয়োটা");
+আমারগাড়ি.চালাও();` },
+  { id: 'etc', title: 'ইত্যাদি', example: `// এটি একটি placeholder, ভবিষ্যতে আরও টপিক আসবে।
+দেখাও("আরো ফিচার শীঘ্রই আসছে...");` },
+];
+
 export default function Docs() {
+  const [activeTopic, setActiveTopic] = useState(topics[0].id);
+  const activeContent = topics.find(topic => topic.id === activeTopic);
+
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto px-6 py-10 text-gray-800">
-        <h1 className="text-4xl font-bold mb-4 text-center text-blue-700">BanglaScript ডকুমেন্টেশন</h1>
-
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-2 text-blue-600">👋 পরিচিতি</h2>
-          <p className="text-lg leading-relaxed">
-            BanglaScript একটি বাংলাভাষায় প্রোগ্রামিং শেখার প্রাথমিক প্ল্যাটফর্ম। এটি একটি ফান প্রজেক্ট, যা আপনাকে মাতৃভাষায় কোডিংয়ের অভিজ্ঞতা দেবে।
-          </p>
-        </section>
-
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-2 text-blue-600">📌 কিওয়ার্ড তালিকা</h2>
-          <ul className="list-disc list-inside text-lg space-y-1">
-            <li><code className="bg-gray-100 px-1 rounded">ধরি</code> — ভ্যারিয়েবল ডিক্লেয়ার করতে</li>
-            <li><code className="bg-gray-100 px-1 rounded">দেখাও()</code> — কনসোলে কিছু দেখাতে</li>
-            <li><code className="bg-gray-100 px-1 rounded">যদি</code>, <code className="bg-gray-100 px-1 rounded">নয়তো</code> — শর্ত যাচাই</li>
-            <li><code className="bg-gray-100 px-1 rounded">জন্য</code>, <code className="bg-gray-100 px-1 rounded">যতক্ষণ</code> — লুপ</li>
-            <li><code className="bg-gray-100 px-1 rounded">কাঠামো</code> — ফাংশন তৈরিতে</li>
+      <div className="flex min-h-screen">
+        {/* Sidebar */}
+        <div className="w-64 bg-gray-100 p-6 border-r border-gray-300">
+          <h2 className="text-xl font-bold mb-4 text-blue-700">ডকুমেন্টেশন</h2>
+          <ul>
+            {topics.map((topic) => (
+              <li key={topic.id} className="mb-2">
+                <button
+                  onClick={() => setActiveTopic(topic.id)}
+                  className={`w-full text-left p-2 rounded transition-colors duration-200
+                              ${activeTopic === topic.id
+                    ? 'bg-blue-600 text-white font-semibold'
+                    : 'text-gray-800 hover:bg-blue-100'
+                  }`}
+                >
+                  {topic.title}
+                </button>
+              </li>
+            ))}
           </ul>
-        </section>
+        </div>
 
-        <section className="mb-10">
-          <h2 className="text-2xl font-semibold mb-2 text-blue-600">🧪 উদাহরণ</h2>
-          <p className="mb-2 text-lg">নিচে একটি সাধারণ কোড উদাহরণ:</p>
-          <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-auto">
-            {`ধরি নাম = "রহিম";
-            দেখাও(নাম);`}
-          </pre>
-        </section>
+        {/* Main Content Area */}
+        <div className="flex-1 p-10 max-w-4xl mx-auto text-gray-800">
+          <h1 className="text-4xl font-bold mb-4 text-center text-blue-700">BanglaScript ডকুমেন্টেশন</h1>
 
-        <section>
-          <h2 className="text-2xl font-semibold mb-2 text-blue-600">📚 পরবর্তী</h2>
-          <p className="text-lg">
-            আরও ডকুমেন্টেশন, ফিচার, গাইড এবং ভিডিও টিউটোরিয়াল শীঘ্রই যুক্ত হবে। অবদান রাখতে চাইলে GitHub রিপোজিটরিতে PR করুন।
-          </p>
-        </section>
+          {/* Dynamic Content based on selection */}
+          {activeContent && (
+            <section className="mb-10">
+              <h2 className="text-2xl font-semibold mb-4 text-blue-600">{activeContent.title}</h2>
+              <p className="mb-4 text-lg">
+                এখানে `{activeContent.title}` এর বিস্তারিত ব্যাখ্যা থাকবে।
+              </p>
+
+              <h3 className="text-xl font-semibold mb-2 text-blue-500">উদাহরণ</h3>
+              <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-auto">
+                <code>
+                  {activeContent.example}
+                </code>
+              </pre>
+            </section>
+          )}
+
+          {/* Original sections (if you want to keep them) */}
+          <section className="mt-10 mb-10 border-t pt-10">
+            <h2 className="text-2xl font-semibold mb-2 text-blue-600">👋 পরিচিতি</h2>
+            <p className="text-lg leading-relaxed">
+              BanglaScript একটি বাংলাভাষায় প্রোগ্রামিং শেখার প্রাথমিক প্ল্যাটফর্ম। এটি একটি ফান প্রজেক্ট, যা আপনাকে মাতৃভাষায় কোডিংয়ের অভিজ্ঞতা দেবে।
+            </p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-semibold mb-2 text-blue-600">📚 পরবর্তী</h2>
+            <p className="text-lg">
+              আরও ডকুমেন্টেশন, ফিচার, গাইড এবং ভিডিও টিউটোরিয়াল শীঘ্রই যুক্ত হবে। অবদান রাখতে চাইলে GitHub রিপোজিটরিতে PR করুন।
+            </p>
+          </section>
+        </div>
       </div>
     </>
   );

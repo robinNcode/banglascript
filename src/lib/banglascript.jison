@@ -31,7 +31,7 @@
 "নির্মাতা"      return 'CONSTRUCTOR'
 "নতুন"          return 'NEW'
 
-[0-9]+(\.[0-9]+)?    return 'NUMBER'
+[0-9\u09E6-\u09EF]+(\.[0-9\u09E6-\u09EF]+)?    return 'NUMBER'
 \"[^\"]*\"          return 'STRING_LITERAL'
 "সত্য"         return 'TRUE'
 "মিথ্যা"       return 'FALSE'
