@@ -2,6 +2,8 @@ import { useState, type SetStateAction} from 'react';
 import Navbar from '../components/Navbar';
 import Footer from "../components/Footer.tsx";
 import topics from '../data/documentationTopics.json';
+import {javascript} from "@codemirror/lang-javascript";
+import CodeMirror from '@uiw/react-codemirror';
 
 export default function Docs() {
   const [activeTopic, setActiveTopic] = useState(topics[0].id);
@@ -69,9 +71,13 @@ export default function Docs() {
 
               <h3 className="text-xl font-semibold mb-2 text-blue-500">উদাহরণ</h3>
               <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-auto">
-                <code>
-                  {activeContent.examples[activeTab].code}
-                </code>
+                <CodeMirror
+                  value={activeContent.examples[activeTab].code}
+                  height="100%"
+                  theme="dark"
+                  extensions={[javascript()]}
+                  className="h-full"
+                />
               </pre>
             </section>
           )}
