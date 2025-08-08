@@ -31,6 +31,7 @@ export default function Feedback() {
       setForm({ name: '', email: '', message: '' });
       setError('');
     } catch (err) {
+      console.log('Error submitting feedback:', err);
       setError('পাঠাতে ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
     }
   };
@@ -85,11 +86,28 @@ export default function Feedback() {
             </div>
             <div className="text-center">
               <button
+                type="reset"
+                onClick={() => window.open('https://github.com/robinNcode/banglascript/issues/new', '_blank')}
+                className="ml-4 bg-green-300 hover:bg-green-400 text-green-800 font-semibold px-6 py-2 rounded"
+              >
+                গিটহাবে ইস্যু খুলুন
+              </button>
+
+              <button
+                type="reset"
+                onClick={() => setForm({ name: '', email: '', message: '' })}
+                className="ml-4 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-6 py-2 rounded"
+              >
+                রিসেট
+              </button>
+
+              <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded"
+                className="ml-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded"
               >
                 পাঠান
               </button>
+
             </div>
           </form>
         )}
