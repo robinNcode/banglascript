@@ -21,14 +21,12 @@ export default function Docs() {
       <div className="flex min-h-screen">
         {/* Sidebar */}
         <div className="w-64 bg-gray-100 p-6 border-r border-gray-300">
-          <h2 className="text-xl font-bold mb-4 text-blue-700">উদাহরণ সমূহ</h2>
-          <hr className="py-1" />
           <ul>
             {topics.map((topic) => (
-              <li key={topic.id} className="mb-2">
+              <li key={topic.id} className="mb-1">
                 <button
                   onClick={() => handleTopicChange(topic.id)}
-                  className={`w-full text-left p-2 rounded transition-colors duration-200
+                  className={`w-full text-left p-1 rounded transition-colors duration-200
                               ${activeTopic === topic.id
                     ? 'bg-blue-600 text-white font-semibold'
                     : 'text-gray-800 hover:bg-blue-100'
@@ -43,9 +41,6 @@ export default function Docs() {
 
         {/* Main Content Area */}
         <div className="flex-1 p-4 max-w-4xl mx-auto text-gray-800">
-          <h1 className="text-4xl font-bold mb-4 text-center text-blue-700">BanglaScript ডকুমেন্টেশন</h1>
-          <hr className="py-1" />
-
           {activeContent && (
             <section className="mb-10">
               <h2 className="text-2xl font-semibold mb-4 text-blue-600">{activeContent.title}</h2>

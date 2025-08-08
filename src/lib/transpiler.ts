@@ -82,6 +82,9 @@ export function transpile(node: any): string {
         case 'ForLoop':
             return `for (${transpile(node.init)} ${transpile(node.test)}; ${transpile(node.update)}) ${transpile(node.body)}`;
 
+        case 'UpdateExpression':
+            return `${transpile(node.argument)}${node.operator}`;
+
         case 'WhileLoop':
             return `while (${transpile(node.test)}) ${transpile(node.body)}`;
 

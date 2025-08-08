@@ -48,20 +48,22 @@
 ","             return 'COMMA'
 "."             return 'DOT'
 
-"="             return 'ASSIGN'
-"+"             return 'PLUS'
-"-"             return 'MINUS'
-"*"             return 'MULTIPLY'
-"/"             return 'DIVIDE'
+"++"            return 'INCREMENT'
+"--"            return 'DECREMENT'
 "=="            return 'EQUALS'
 "!="            return 'NOT_EQUALS'
-"<"             return 'LT'
-">"             return 'GT'
 "<="            return 'LTE'
 ">="            return 'GTE'
 "&&"            return 'AND'
 "||"            return 'OR'
+"="             return 'ASSIGN'
+"<"             return 'LT'
+">"             return 'GT'
 "!"             return 'NOT'
+"+"             return 'PLUS'
+"-"             return 'MINUS'
+"*"             return 'MULTIPLY'
+"/"             return 'DIVIDE'
 
 <<EOF>>         return 'EOF'
 /lex
@@ -196,8 +198,17 @@ loop_statement
     ;
 
 for_loop
-    : FOR LPAREN expression SEMICOLON expression SEMICOLON expression RPAREN block
-        { $$ = { type: 'ForLoop', init: $3, test: $5, update: $7, body: $9 }; }
+    : FOR LPAREN variable_declaration SEMICOLON expression SEMICOLON update_expression RPAREN block
+        { $ = { type: 'ForLoop', init: $3, test: $5, update: $7, body: $9 }; }
+    ;
+
+update_expression
+    : expression
+        { $ = $1; }
+    | IDENTIFIER INCREMENT
+        { $ = { type: 'UpdateExpression', operator: '++', argument: { type: 'Identifier', name: $1 }, prefix: false }; }
+    | IDENTIFIER DECREMENT
+        { $ = { type: 'UpdateExpression', operator: '--', argument: { type: 'Identifier', name: $1 }, prefix: false }; }
     ;
 
 while_loop

@@ -20,7 +20,7 @@ const navItems = [
   { name: 'ফিডব্যাক', path: '/feedback', icon: MessageSquare },
   {
     name: 'অবদান রাখুন',
-    path: 'https://github.com/robinNcode/banglascript/blob/master/contribute.md',
+    path: 'https://github.com/robinNcode/banglascript/blob/master/CONTRIBUTE.md',
     icon: Handshake,
     external: true,
   },

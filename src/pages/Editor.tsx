@@ -124,7 +124,7 @@ export default function Editor() {
 
 
         {/* Editor */}
-        <div className="flex-1 overflow-auto bg-gray-800 text-white p-4">
+        <div className="flex-1 overflow-auto bg-gray-800 text-white">
           {activeFile && (
             <CodeMirror
               value={code}
@@ -132,6 +132,7 @@ export default function Editor() {
               theme="dark"
               extensions={[javascript()]}
               onChange={(value) => setCode(value)}
+              className="h-full"
             />
           )}
         </div>
