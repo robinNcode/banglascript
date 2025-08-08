@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Typewriter from 'typewriter-effect';
+import axios from '../api/axios';
 
 // Icons
 import {SquareCode, Cpu} from 'lucide-react';
@@ -15,18 +16,17 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/api/visitor-count')
-      .then(res => res.json())
-      .then(data => setVisitors(data.count))
+    axios.get('/api/visitor-count')
+      .then(res => setVisitors(res.data.count))
       .catch(() => setVisitors(null));
   }, []);
 
   return (
     <>
       <Navbar />
-      <section className="bg-gradient-to-br from-blue-100 to-white min-h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center p-6">
+      <section className="from-blue-100 to-white min-h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center p-6">
         <img src={banglaLogo} alt="BanglaScript Logo" className="w-100 h-24 mb-2" />
-        <h1 className="text-5xl font-extrabold text-gray-800 mb-4">
+        <h1 className="text-5xl font-extrabold text-white-800 mb-4">
           <Typewriter
           options={{
             strings: ['বাংলাScript'],
@@ -48,13 +48,16 @@ export default function Home() {
         </button>
 
         <p className="mt-8 text-gray-500 flex items-center">
-          <Typewriter
-            options={{
-              strings: ['- ডেভেলপ এবং মেইনটেইন:'],
-              autoStart: true,
-              loop: true,
-            }}
-          /><a className="text-blue-500 flex items-center" href="https://www.linkedin.com/in/robinncode/" target="_blank"><Cpu className="m-2"/> MsM Robin </a>
+          - ডেভেলপ এবং মেইনটেইন:
+          <a className="text-blue-500 flex items-center" href="https://www.linkedin.com/in/robinncode/" target="_blank"><Cpu className="m-2"/>
+            <Typewriter
+              options={{
+                strings: ['MsM Robin'],
+                autoStart: true,
+                loop: true,
+              }}
+            />
+          </a>
         </p>
 
       </section>

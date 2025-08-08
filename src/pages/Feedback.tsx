@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from "../components/Footer.tsx";
+import axios from '../api/axios';
+import { RotateCw } from 'lucide-react';
 
 export default function Feedback() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -20,12 +22,7 @@ export default function Feedback() {
     }
 
     try {
-      // TODO: Replace with actual API
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/feedback`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
+      await axios.post('/api/feedback', form);
 
       setSubmitted(true);
       setForm({ name: '', email: '', message: '' });
@@ -45,6 +42,12 @@ export default function Feedback() {
         {submitted ? (
           <div className="bg-green-100 text-green-800 p-4 rounded shadow text-center">
             ✅ ধন্যবাদ! আপনার প্রতিক্রিয়া গ্রহণ করা হয়েছে।
+            <button
+              onClick={() => setSubmitted(false)}
+              className="ml-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
+            >
+              <RotateCw className="w-4 h-4" />
+            </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow space-y-4">

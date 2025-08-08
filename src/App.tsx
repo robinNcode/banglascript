@@ -3,9 +3,6 @@ import { parse } from './lib/parser.ts';
 import { transpile } from './lib/transpiler.ts';
 import { banglascript } from './lib/banglascript_mode.ts';
 
-// Importing styles
-import './App.css';
-
 // Editor component for BanglaScript code
 import CodeMirror from '@uiw/react-codemirror';
 
