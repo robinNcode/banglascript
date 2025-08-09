@@ -36,6 +36,7 @@ export default function Feedback() {
   return (
     <>
       <Navbar />
+      <main className="main-content">
       <div className="max-w-2xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">প্রতিক্রিয়া দিন</h1>
 
@@ -115,6 +116,7 @@ export default function Feedback() {
           </form>
         )}
       </div>
+      </main>
       <Footer />
     </>
   );

@@ -12,6 +12,16 @@ html, body, #root {
   background-size: cover;
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

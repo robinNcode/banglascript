@@ -20,6 +20,7 @@ export default function Docs() {
   return (
     <>
       <Navbar />
+      <main className="main-content">
       <div className="flex min-h-screen">
         {/* Sidebar */}
         <div className="w-64 bg-gray-100 p-6 border-r border-gray-300">
@@ -96,6 +97,7 @@ export default function Docs() {
           </section>
         </div>
       </div>
+      </main>
       <Footer />
     </>
   );
