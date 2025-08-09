@@ -15,6 +15,25 @@ export default function Home() {
   const [visitors, setVisitors] = useState<number | null>(null);
   const navigate = useNavigate();
 
+  // Send visitor info to the server when the component mounts ...
+  useEffect(() => {
+    const sendVisitorInfo = async () => {
+      try {
+        await axios.post('/api/visitor');
+        console.log('Visitor info Sent!');
+      } catch (error) {
+        console.error('Error sending visitor info:', error);
+      }
+    };
+
+    sendVisitorInfo().then(response => {
+      console.log('Visitor info sent successfully:', response);
+    }).catch(error => {
+      console.error('Unable to store visitor info:', error);
+    });
+  }, []);
+
+  // Fetch visitor count from the server
   useEffect(() => {
     axios.get('/api/visitor-count')
       .then(res => setVisitors(res.data.count))
