@@ -35,7 +35,12 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} className="w-8 h-8" alt="logo" />
-          <span className="text-lg font-semibold hidden md:block">BanglaScript</span>
+                    <span className="text-lg font-semibold hidden md:block">
+            BanglaScript
+            <sup className="text-xs bg-yellow-400 text-gray-900 px-1.5 py-0.5 rounded-full ml-1">
+              BETA
+            </sup>
+          </span>
         </Link>
         <div className="hidden md:flex gap-6 text-sm">
           {navItems.map(({ name, path, icon: Icon, external }) =>

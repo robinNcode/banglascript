@@ -68,11 +68,11 @@ export default function Home() {
         </button>
 
         <p className="mt-8 text-gray-500 flex items-center">
-          - ডেভেলপ এবং মেইনটেইন:
+          - বানিয়েছেন:
           <a className="text-blue-500 flex items-center" href="https://www.linkedin.com/in/robinncode/" target="_blank"><Cpu className="m-2"/>
             <Typewriter
               options={{
-                strings: ['MsM Robin'],
+                strings: ['মোঃ শাহিন মিয়া রবিন'],
                 autoStart: true,
                 loop: true,
               }}
