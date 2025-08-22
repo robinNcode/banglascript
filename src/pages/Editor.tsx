@@ -1,10 +1,12 @@
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import {javascript} from '@codemirror/lang-javascript';
 import Navbar from '../components/Navbar';
 import {transpile} from '../lib/transpiler';
 import {parse} from '../lib/parser';
 import {translateErrorToBengali} from '../lib/error_translator';
+import { EditorView } from '@codemirror/view';
+import { undo, redo } from '@codemirror/commands';
 
 // Icons
 import {RotateCcw, RotateCw, Play, TimerReset, FilePlus, X} from 'lucide-react';
@@ -18,6 +20,7 @@ export default function Editor() {
   const [files, setFiles] = useState<File[]>([{ name: 'main.bs', content: 'দেখাও("হ্যালো, বিশ্ব!");' }]);
   const [activeFileIndex, setActiveFileIndex] = useState(0);
   const [output, setOutput] = useState('');
+  const editorRef = useRef<EditorView | null>(null);
 
   const activeFile = files[activeFileIndex];
   const code = activeFile?.content || '';
@@ -78,6 +81,17 @@ export default function Editor() {
     }
   };
 
+  const handleUndo = () => {
+    if (editorRef.current) {
+      undo(editorRef.current);
+    }
+  };
+
+  const handleRedo = () => {
+    if (editorRef.current) {
+      redo(editorRef.current);
+    }
+  };
 
   return (
     <>
@@ -91,32 +105,32 @@ export default function Editor() {
                   ? 'bg-gray-700 text-white'
                   : 'bg-gray-800 text-gray-400'
               }`}>
-                <button onClick={() => setActiveFileIndex(index)}>
+                <button onClick={() => setActiveFileIndex(index)} title={file.name}>
                   {file.name}
                 </button>
                 {index > 0 && (
-                  <button onClick={() => closeFile(index)} className="hover:text-red-500">
+                  <button onClick={() => closeFile(index)} className="hover:text-red-500" title="ফাইল বন্ধ করুন">
                     <X className="w-4 h-4"/>
                   </button>
                 )}
               </div>
             ))}
 
-            <button onClick={newFile} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+            <button onClick={newFile} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-blue-600" title="নতুন ফাইল">
               <FilePlus className="w-4 h-5"/>
             </button>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={run} className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-700">
+            <button onClick={run} className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-700" title="রান">
               <Play className="w-4 h-4"/>
             </button>
-            <button onClick={reset} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600">
+            <button onClick={reset} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600" title="রিসেট">
               <TimerReset className="w-4 h-4"/>
             </button>
-            <button onClick={() => document.execCommand('undo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+            <button onClick={handleUndo} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" title="আগের অবস্থায় ফিরুন">
               <RotateCcw className="w-4 h-4"/>
             </button>
-            <button onClick={() => document.execCommand('redo')} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+            <button onClick={handleRedo} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" title="পুনরায় করুন">
               <RotateCw className="w-4 h-4"/>
             </button>
           </div>
@@ -130,8 +144,11 @@ export default function Editor() {
               value={code}
               height="100%"
               theme="dark"
-              extensions={[javascript()]}
-              onChange={(value) => setCode(value)}
+              extensions={[javascript()]} // This is where the javascript language extension is applied
+              onChange={(value, viewUpdate) => {
+                setCode(value);
+                editorRef.current = viewUpdate.view;
+              }}
               className="h-full"
             />
           )}
