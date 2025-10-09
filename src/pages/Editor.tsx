@@ -1,43 +1,46 @@
-import {useState, useRef} from 'react';
-import CodeMirror from '@uiw/react-codemirror';
-import {javascript} from '@codemirror/lang-javascript';
-import Navbar from '../components/Navbar';
-import {transpile} from '../lib/transpiler';
-import {parse} from '../lib/parser';
-import {translateErrorToBengali} from '../lib/error_translator';
+import React, { useState, useRef } from 'react';
 import { EditorView } from '@codemirror/view';
-import { undo, redo } from '@codemirror/commands';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import Navbar from '../components/Navbar';
+import Sidebar from '../components/editor/Sidebar';
+import Toolbar from '../components/editor/Toolbar';
+import CodeEditor from '../components/editor/CodeEditor';
+import OutputPanel from '../components/editor/OutputPanel';
+import { transpile } from '../lib/transpiler';
+import { parse } from '../lib/parser';
+import { translateErrorToBengali } from '../lib/error_translator';
 
-// Icons
-import {RotateCcw, RotateCw, Play, TimerReset, FilePlus, X} from 'lucide-react';
-
-interface File {
+export interface File {
   name: string;
   content: string;
+  isSaved: boolean;
 }
 
-export default function Editor() {
-  const [files, setFiles] = useState<File[]>([{ name: 'main.bs', content: 'দেখাও("হ্যালো, বিশ্ব!");' }]);
+const Editor: React.FC = () => {
+  const [files, setFiles] = useState<File[]>([
+    { name: 'main.bs', content: 'দেখাও("হ্যালো, বিশ্ব!");', isSaved: true },
+  ]);
   const [activeFileIndex, setActiveFileIndex] = useState(0);
   const [output, setOutput] = useState('');
+  const [showSidebar, setShowSidebar] = useState(false);
   const editorRef = useRef<EditorView | null>(null);
 
   const activeFile = files[activeFileIndex];
-  const code = activeFile?.content || '';
 
   const setCode = (content: string) => {
     const newFiles = [...files];
-    newFiles[activeFileIndex].content = content;
-    setFiles(newFiles);
+    if (newFiles[activeFileIndex]) {
+      newFiles[activeFileIndex].content = content;
+      newFiles[activeFileIndex].isSaved = false;
+      setFiles(newFiles);
+    }
   };
 
-  const run = () => {
+  const runCode = () => {
     if (!activeFile) return;
     try {
-      const ast = parse(code);
+      const ast = parse(activeFile.content);
       const result = transpile(ast);
-      // Debugging
-      console.log(`[DEBUG]: Transpiled code: ${result}`);
 
       const originalLog = console.log;
       let capturedOutput = '';
@@ -47,7 +50,7 @@ export default function Editor() {
 
       try {
         new Function(result)();
-        setOutput(capturedOutput);
+        setOutput(capturedOutput.trim() || '✓ কোড সফলভাবে চলেছে');
       } catch (e: any) {
         setOutput(translateErrorToBengali(e.message));
       } finally {
@@ -58,108 +61,76 @@ export default function Editor() {
     }
   };
 
-  const reset = () => {
+  const resetCode = () => {
     if (!activeFile) return;
     setCode('');
     setOutput('');
   };
 
-  const newFile = () => {
-    const newFileName = `file${files.length + 1}.bs`;
-    setFiles([...files, { name: newFileName, content: '' }]);
-    setActiveFileIndex(files.length);
-  };
+  const saveFile = () => {
+    if (!activeFile) return;
+    const blob = new Blob([activeFile.content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = activeFile.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 
-  const closeFile = (index: number) => {
-    if (files.length <= 1) return; // Prevent closing the last file
+    // Mark file as saved
     const newFiles = [...files];
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
-
-    if (activeFileIndex >= index) {
-      setActiveFileIndex(Math.max(0, activeFileIndex - 1));
-    }
-  };
-
-  const handleUndo = () => {
-    if (editorRef.current) {
-      undo(editorRef.current);
-    }
-  };
-
-  const handleRedo = () => {
-    if (editorRef.current) {
-      redo(editorRef.current);
+    if (newFiles[activeFileIndex]) {
+        newFiles[activeFileIndex].isSaved = true;
+        setFiles(newFiles);
     }
   };
 
   return (
-    <>
-      <Navbar/>
-      <div className="flex flex-col h-[calc(100vh-64px)]">
-        {/* Toolbar & File Tabs */}
-        <div className="flex justify-between items-center px-4 py-2 bg-gray-800 border-b border-gray-300">
-          <div className="flex items-center gap-2">
-            {files.map((file, index) => (
-              <div key={index} className={`flex items-center gap-2 px-4 py-2 ${ index === activeFileIndex
-                  ? 'bg-gray-700 text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}>
-                <button onClick={() => setActiveFileIndex(index)} title={file.name}>
-                  {file.name}
-                </button>
-                {index > 0 && (
-                  <button onClick={() => closeFile(index)} className="hover:text-red-500" title="ফাইল বন্ধ করুন">
-                    <X className="w-4 h-4"/>
-                  </button>
+    <div className="flex flex-col h-screen bg-slate-900 text-white">
+      <Navbar />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar
+          files={files}
+          activeFileIndex={activeFileIndex}
+          setActiveFileIndex={setActiveFileIndex}
+          setFiles={setFiles}
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+        />
+        <main className="flex-1 flex flex-col min-w-0">
+          <Toolbar
+            activeFile={activeFile}
+            runCode={runCode}
+            resetCode={resetCode}
+            saveFile={saveFile}
+            editorRef={editorRef}
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
+          />
+          <PanelGroup direction="vertical" className="flex-1 overflow-hidden">
+            <Panel defaultSize={70} minSize={20}>
+              <div className="h-full w-full bg-[#272822]">
+                {activeFile && (
+                  <CodeEditor
+                    key={activeFile.name} // Force re-mount when file changes
+                    code={activeFile.content}
+                    setCode={setCode}
+                    editorRef={editorRef}
+                  />
                 )}
               </div>
-            ))}
-
-            <button onClick={newFile} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-blue-600" title="নতুন ফাইল">
-              <FilePlus className="w-4 h-5"/>
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <button onClick={run} className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-700" title="রান">
-              <Play className="w-4 h-4"/>
-            </button>
-            <button onClick={reset} className="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600" title="রিসেট">
-              <TimerReset className="w-4 h-4"/>
-            </button>
-            <button onClick={handleUndo} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" title="আগের অবস্থায় ফিরুন">
-              <RotateCcw className="w-4 h-4"/>
-            </button>
-            <button onClick={handleRedo} className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" title="পুনরায় করুন">
-              <RotateCw className="w-4 h-4"/>
-            </button>
-          </div>
-        </div>
-
-
-        {/* Editor */}
-        <div className="flex-1 overflow-auto bg-gray-800 text-white">
-          {activeFile && (
-            <CodeMirror
-              value={code}
-              height="100%"
-              theme="dark"
-              extensions={[javascript()]} // This is where the javascript language extension is applied
-              onChange={(value, viewUpdate) => {
-                setCode(value);
-                editorRef.current = viewUpdate.view;
-              }}
-              className="h-full"
-            />
-          )}
-        </div>
-
-        {/* Output */}
-        <div className="h-[30%] bg-black text-green-400 p-4 font-mono overflow-auto border-t border-gray-700">
-          <pre>{output}</pre>
-        </div>
+            </Panel>
+            <PanelResizeHandle className="h-2 bg-slate-800 hover:bg-blue-600 transition-colors data-[resize-handle-state=drag]:bg-blue-600" />
+            <Panel defaultSize={30} minSize={10} collapsible>
+              <OutputPanel output={output} setOutput={setOutput} />
+            </Panel>
+          </PanelGroup>
+        </main>
       </div>
-    </>
+    </div>
   );
-}
+};
 
+export default Editor;

@@ -45,7 +45,7 @@ export default function Home() {
       <Navbar />
       <main className="main-content">
       <section className="from-blue-100 to-white min-h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center p-6">
-        <img src={banglaLogo} alt="BanglaScript Logo" className="w-100 h-24 mb-2" />
+        <img src={banglaLogo} alt="BanglaScript Logo" className="w-80 h-30 mb-2" />
         <h1 className="text-5xl font-extrabold text-white-800 mb-4">
           <Typewriter
           options={{
