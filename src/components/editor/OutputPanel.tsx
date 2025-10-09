@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trash, Copy, Terminal } from 'lucide-react';
+import { Trash, Copy, Terminal } from 'lucide-react';
 
 interface OutputPanelProps {
   output: string;

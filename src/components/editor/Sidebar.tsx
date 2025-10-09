@@ -1,6 +1,7 @@
 import React from 'react';
 import { FilePlus, X, Trash, File as FileIcon } from 'lucide-react';
-import File from '../../pages/Editor';
+
+import type { File } from '../../pages/Editor';
 
 interface SidebarProps {
   files: File[];

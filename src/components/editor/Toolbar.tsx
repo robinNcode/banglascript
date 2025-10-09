@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { RotateCcw, RotateCw, Play, Trash2, Download, Menu } from 'lucide-react';
 import { EditorView } from '@codemirror/view';
 import { undo, redo } from '@codemirror/commands';
-import  File  from '../../pages/Editor';
+
+import type { File } from '../../pages/Editor';
 
 interface ToolbarProps {
   activeFile: File | undefined;
@@ -23,8 +24,17 @@ const Toolbar: React.FC<ToolbarProps> = ({
   showSidebar,
   setShowSidebar,
 }) => {
-  const handleUndo = () => editorRef.current && undo(editorRef.current);
-  const handleRedo = () => editorRef.current && redo(editorRef.current);
+  const handleUndo = useCallback(() => {
+    if (editorRef.current) {
+      undo(editorRef.current);
+    }
+  }, [editorRef]);
+
+  const handleRedo = useCallback(() => {
+    if (editorRef.current) {
+      redo(editorRef.current);
+    }
+  }, [editorRef]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -51,9 +61,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [runCode, saveFile]);
+  }, [runCode, saveFile, handleUndo, handleRedo]);
 
-  const ToolbarButton = ({ onClick, title, children, className = '' }: any) => (
+  const ToolbarButton = ({ onClick, title, children, className = '' }: { onClick: () => void; title: string; children: React.ReactNode; className?: string }) => (
     <button
       onClick={onClick}
       title={title}
