@@ -44,43 +44,43 @@ export default function Home() {
     <>
       <Navbar />
       <main className="main-content">
-      <section className="from-blue-100 to-white min-h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center p-6">
-        <img src={banglaLogo} alt="BanglaScript Logo" className="w-100 h-24 mb-2" />
-        <h1 className="text-5xl font-extrabold text-white-800 mb-4">
-          <Typewriter
-          options={{
-            strings: ['বাংলাScript'],
-            autoStart: true,
-            loop: true,
-          }}
-        /></h1>
-        <p className="max-w-2xl text-lg text-gray-700 leading-relaxed mb-6">
-          বাংলায় কোড লেখার জন্য তৈরি একটি শিক্ষামূলক প্রোগ্রামিং ভাষা। সহজ, সরল ও মাতৃভাষায় শেখার নতুন পথ।
-        </p>
-        <p className="text-sm text-gray-600 mb-4">
-          মোট ভিজিটর: <span className="font-bold">{visitors ?? 'লোড হচ্ছে...'}</span>
-        </p>
-        <button
-          onClick={() => navigate('/editor')}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md transition flex items-center gap-2"
-        >
-          <SquareCode /> কোড শুরু করুন
-        </button>
-
-        <p className="mt-8 text-gray-500 flex items-center">
-          - বানিয়েছেন:
-          <a className="text-blue-500 flex items-center" href="https://www.linkedin.com/in/robinncode/" target="_blank"><Cpu className="m-2"/>
+        <section className="from-blue-100 to-white min-h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center p-6">
+          <img src={banglaLogo} alt="BanglaScript Logo" className="w-80 h-30 mb-2" />
+          <h1 className="text-5xl font-extrabold text-white-800 mb-4">
             <Typewriter
               options={{
-                strings: ['মোঃ শাহিন মিয়া রবিন'],
+                strings: ['বাংলাScript'],
                 autoStart: true,
                 loop: true,
               }}
-            />
-          </a>
-        </p>
+            /></h1>
+          <p className="max-w-2xl text-lg text-gray-700 leading-relaxed mb-6">
+            বাংলায় কোড লেখার জন্য তৈরি একটি শিক্ষামূলক প্রোগ্রামিং ভাষা। সহজ, সরল ও মাতৃভাষায় শেখার নতুন পথ।
+          </p>
+          <p className="text-sm text-gray-600 mb-4">
+            মোট ভিজিটর: <span className="font-bold">{visitors ?? 'লোড হচ্ছে...'}</span>
+          </p>
+          <button
+            onClick={() => navigate('/editor')}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-md transition flex items-center gap-2"
+          >
+            <SquareCode /> কোড শুরু করুন
+          </button>
 
-      </section>
+          <p className="mt-8 text-gray-500 flex items-center">
+            - বানিয়েছেন:
+            <a className="text-blue-500 flex items-center" href="https://www.linkedin.com/in/robinncode/" target="_blank"><Cpu className="m-2"/>
+              <Typewriter
+                options={{
+                  strings: ['মোঃ শাহিন মিয়া রবিন'],
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
+            </a>
+          </p>
+
+        </section>
       </main>
       <Footer />
     </>
