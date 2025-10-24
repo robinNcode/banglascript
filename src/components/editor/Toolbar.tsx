@@ -63,7 +63,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [runCode, saveFile, handleUndo, handleRedo]);
 
-  const ToolbarButton = ({onClick, title, children, className = ''}: { onClick: () => void; title: string; children: React.ReactNode; className?: string }) => (
+  const ToolbarButton = ({onClick, title, children, className = ''}: {
+    onClick: () => void;
+    title: string;
+    children: React.ReactNode;
+    className?: string
+  }) => (
     <button
       onClick={onClick}
       title={title}
@@ -98,22 +103,37 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
         <div className="h-6 w-px bg-slate-600"/>
 
-        <div className="flex items-center gap-2">
-          <ToolbarButton onClick={saveFile} title="ফাইল সেভ করুন (Ctrl+S)">
-            <Download className="w-5 h-5"/>
-          </ToolbarButton>
-          <ToolbarButton onClick={resetCode} title="কোড রিসেট করুন" className="hover:bg-red-500">
-            <Trash2 className="w-5 h-5"/>
-          </ToolbarButton>
-          <button
-            onClick={runCode}
-            title="কোড রান করুন (Ctrl+R)"
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 hover:bg-green-700 transition-colors font-semibold text-sm"
-          >
-            <Play className="w-5 h-5"/>
-            <span className="hidden sm:inline">রান</span>
-          </button>
-        </div>
+                <div className="flex items-center gap-2">
+
+                  <ToolbarButton onClick={saveFile} title="ফাইল সেভ করুন (Ctrl+S)">
+
+                    <Download className="w-5 h-5"/>
+
+                  </ToolbarButton>
+
+                  <ToolbarButton onClick={resetCode} title="কোড রিসেট করুন" className="hover:bg-red-500">
+
+                    <Trash2 className="w-5 h-5"/>
+
+                  </ToolbarButton>
+
+                  <button
+
+                    onClick={runCode}
+
+                    title="কোড রান করুন (Ctrl+R)"
+
+                    className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 hover:bg-green-700 transition-colors font-semibold text-sm"
+
+                  >
+
+                    <Play className="w-5 h-5"/>
+
+                    <span className="hidden sm:inline">রান</span>
+
+                  </button>
+
+                </div>
       </div>
     </div>
   );

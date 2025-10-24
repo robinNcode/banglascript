@@ -8,6 +8,8 @@ import {
   Handshake,
   Menu,
   X,
+  Blocks,
+  BookOpen,
 } from 'lucide-react';
 
 // images
@@ -17,6 +19,8 @@ const navItems = [
   { name: 'হোম', path: '/', icon: Home },
   { name: 'কোড', path: '/editor', icon: Code2 },
   { name: 'ডকুমেন্টেশন', path: '/docs', icon: BookText },
+  { name: 'ব্লক কোডিং', path: '/kidscoder/block-coding', icon: Blocks },
+  { name: 'কুইজ গাইড', path: '/kidscoder/quiz-guide', icon: BookOpen },
   { name: 'ফিডব্যাক', path: '/feedback', icon: MessageSquare },
   {
     name: 'অবদান রাখুন',
