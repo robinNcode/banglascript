@@ -1,7 +1,8 @@
 import React from 'react';
 import Navbar from "../components/Navbar.tsx";
+import Footer from "../components/Footer.tsx";
 
-const KidsCoderQuizGuide: React.FC = () => {
+const Quiz: React.FC = () => {
   return (
     <>
       <Navbar/>
@@ -11,8 +12,10 @@ const KidsCoderQuizGuide: React.FC = () => {
           <h1 className="text-4xl font-bold">KidsCoder Quiz Guide - Coming Soon!</h1>
         </div>
       </main>
+
+      <Footer />
     </>
   );
 };
 
-export default KidsCoderQuizGuide;
+export default Quiz;

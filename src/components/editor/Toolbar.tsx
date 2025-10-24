@@ -15,15 +15,7 @@ interface ToolbarProps {
   setShowSidebar: (show: boolean) => void;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({
-                                           activeFile,
-                                           runCode,
-                                           resetCode,
-                                           saveFile,
-                                           editorRef,
-                                           showSidebar,
-                                           setShowSidebar,
-                                         }) => {
+const Toolbar: React.FC<ToolbarProps> = ({activeFile, runCode, resetCode, saveFile, editorRef, showSidebar, setShowSidebar,}) => {
   const handleUndo = useCallback(() => {
     if (editorRef.current) {
       undo(editorRef.current);
@@ -102,38 +94,20 @@ const Toolbar: React.FC<ToolbarProps> = ({
         </div>
 
         <div className="h-6 w-px bg-slate-600"/>
+        <div className="flex items-center gap-2">
+          <ToolbarButton onClick={saveFile} title="ফাইল সেভ করুন (Ctrl+S)">
+            <Download className="w-5 h-5"/>
+          </ToolbarButton>
 
-                <div className="flex items-center gap-2">
+          <ToolbarButton onClick={resetCode} title="কোড রিসেট করুন" className="hover:bg-red-500">
+            <Trash2 className="w-5 h-5"/>
+          </ToolbarButton>
 
-                  <ToolbarButton onClick={saveFile} title="ফাইল সেভ করুন (Ctrl+S)">
-
-                    <Download className="w-5 h-5"/>
-
-                  </ToolbarButton>
-
-                  <ToolbarButton onClick={resetCode} title="কোড রিসেট করুন" className="hover:bg-red-500">
-
-                    <Trash2 className="w-5 h-5"/>
-
-                  </ToolbarButton>
-
-                  <button
-
-                    onClick={runCode}
-
-                    title="কোড রান করুন (Ctrl+R)"
-
-                    className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 hover:bg-green-700 transition-colors font-semibold text-sm"
-
-                  >
-
-                    <Play className="w-5 h-5"/>
-
-                    <span className="hidden sm:inline">রান</span>
-
-                  </button>
-
-                </div>
+          <button onClick={runCode} title="কোড রান করুন (Ctrl+R)" className="flex items-center gap-2 px-4 py-2 rounded-md bg-green-600 hover:bg-green-700 transition-colors font-semibold text-sm">
+            <Play className="w-5 h-5"/>
+            <span className="hidden sm:inline">রান</span>
+          </button>
+        </div>
       </div>
     </div>
   );

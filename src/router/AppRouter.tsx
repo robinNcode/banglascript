@@ -3,8 +3,8 @@ import Home from '../pages/Home';
 import Docs from '../pages/Docs';
 import Editor from '../pages/Editor';
 import Feedback from "../pages/Feedback.tsx";
-import KidsCoderBlockCoding from '../pages/KidsCoderBlockCoding';
-import KidsCoderQuizGuide from '../pages/KidsCoderQuizGuide';
+import BlockCoding from '../pages/BlockCoding.tsx';
+import Quiz from '../pages/Quiz.tsx';
 
 export default function AppRouter() {
   return (
@@ -13,8 +13,8 @@ export default function AppRouter() {
         <Route path="/" element={<Home />} />
         <Route path="/editor" element={<Editor />} />
         <Route path="/docs" element={<Docs />} />
-        <Route path="/kidscoder/block-coding" element={<KidsCoderBlockCoding />} />
-        <Route path="/kidscoder/quiz-guide" element={<KidsCoderQuizGuide />} />
+        <Route path="/kidscoder/block-coding" element={<BlockCoding />} />
+        <Route path="/kidscoder/quiz-guide" element={<Quiz />} />
         <Route path="/feedback" element={<Feedback />} />
       </Routes>
     </BrowserRouter>
